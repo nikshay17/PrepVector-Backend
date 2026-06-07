@@ -1,6 +1,6 @@
-package com.prepVector.backend.repository;
+package com.prepvector.backend.repository;
 
-import com.prepVector.backend.model.User;
+import com.prepvector.backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

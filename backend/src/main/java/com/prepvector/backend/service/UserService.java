@@ -1,9 +1,13 @@
-package com.prepVector.backend.service;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import com.prepVector.backend.dto.SignUpRequest;
-import com.prepVector.backend.model.User;
-import com.prepVector.backend.repository.UserRepository;
+package com.prepvector.backend.service;
+
+import com.prepvector.backend.dto.AuthResponse;
+import com.prepvector.backend.dto.LoginRequest;
+import com.prepvector.backend.dto.SignupRequest;
+import com.prepvector.backend.model.User;
+import com.prepvector.backend.repository.UserRepository;
+import com.prepvector.backend.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,29 +16,30 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public String signup(SignUpRequest request) {
-
+    public String signup(SignupRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
 
-
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-
         userRepository.save(user);
 
         return "User registered successfully";
     }
 
-    public boolean validateUser(String email, String password) {
-
-        User user = userRepository.findByEmail(email)
+    public AuthResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return passwordEncoder.matches(password, user.getPassword());
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        String token = jwtUtil.generateToken(user.getEmail());
+        return new AuthResponse(token, user.getEmail(), user.getRole());
     }
 }

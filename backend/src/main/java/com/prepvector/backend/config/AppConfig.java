@@ -1,4 +1,4 @@
-package com.prepVector.backend.config;
+package com.prepvector.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

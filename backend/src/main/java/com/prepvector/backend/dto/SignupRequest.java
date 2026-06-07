@@ -1,9 +1,9 @@
-package com.prepVector.backend.dto;
+package com.prepvector.backend.dto;
 
 import lombok.Data;
 
 @Data
-public class SignUpRequest {
+public class SignupRequest {
     private String email;
     private String password;
 }

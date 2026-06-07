@@ -1,4 +1,4 @@
-package com.prepVector.backend;
+package com.prepvector.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

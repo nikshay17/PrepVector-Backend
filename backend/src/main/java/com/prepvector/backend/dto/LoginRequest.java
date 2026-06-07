@@ -1,4 +1,4 @@
-package com.prepVector.backend.dto;
+package com.prepvector.backend.dto;
 
 import lombok.Data;
 

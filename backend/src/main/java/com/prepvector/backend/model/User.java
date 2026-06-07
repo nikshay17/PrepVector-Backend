@@ -1,4 +1,4 @@
-package com.prepVector.backend.model;
+package com.prepvector.backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
