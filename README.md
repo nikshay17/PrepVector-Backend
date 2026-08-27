@@ -1,253 +1,221 @@
-# PrepVector Backend
+# PrepVector Backend 🚀
 
-Backend API for **PrepVector**, an AI-powered learning platform that enables users to upload study materials, generate embeddings, and interact with documents through Retrieval-Augmented Generation (RAG).
+Backend service for **PrepVector**, an AI-powered study platform that allows users to upload study material and ask questions based on their documents using **Retrieval-Augmented Generation (RAG)**.
 
-The backend handles authentication, PDF management, document processing, vector retrieval, and communication with the AI service.
+Built with **Java, Spring Boot, PostgreSQL, Qdrant, and Google Gemini**.
 
----
+## 🛠️ Tech Stack
 
-## Features
+* **Java**
+* **Spring Boot**
+* **Spring Data JPA / Hibernate**
+* **PostgreSQL**
+* **Qdrant** — Vector database
+* **Google Gemini** — LLM
+* **Maven**
+* **REST APIs**
 
-- User Authentication using JWT
-- Secure password hashing with bcrypt
-- Upload and manage PDF documents
-- Cloudinary integration for file storage
-- Retrieval-Augmented Generation (RAG)
-- Semantic search over uploaded documents
-- AI-powered question answering
-- User-specific document isolation
-- RESTful API architecture
-- MongoDB database integration
-- Email OTP verification
+## 🏗️ Architecture
 
----
-
-## Tech Stack
-
-### Backend
-
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-
-### Authentication
-
-- JWT
-- bcrypt
-
-### AI & RAG
-
-- Google Gemini API
-- Python Embedding Service
-- FAISS Vector Store
-
-### File Handling
-
-- Multer
-- Cloudinary
-
-### Email
-
-- Brevo SMTP
-
----
-
-# Project Structure
-
-```
-PrepVector-Backend
-│
-├── controllers/
-├── middleware/
-├── models/
-├── routes/
-├── utils/
-├── config/
-├── uploads/
-├── app.js
-├── server.js
-├── package.json
-└── .env
+```text
+                    ┌─────────────────┐
+                    │   Frontend      │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │  Spring Boot    │
+                    │     Backend     │
+                    └────────┬────────┘
+                             │
+              ┌──────────────┼──────────────┐
+              │              │              │
+              ▼              ▼              ▼
+       ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+       │ PostgreSQL  │ │   Qdrant    │ │   Gemini    │
+       │             │ │Vector Store │ │     API     │
+       └─────────────┘ └─────────────┘ └─────────────┘
 ```
 
----
+## ✨ Features
 
-# Getting Started
+* 📄 Upload study documents
+* 🗃️ Store document metadata in PostgreSQL
+* ✂️ Process and chunk documents
+* 🔢 Generate vector representations
+* 🔎 Semantic similarity search using Qdrant
+* 🧠 Retrieve relevant document context
+* 🤖 Generate AI-powered answers using Gemini
+* 🌐 RESTful APIs
+* 📦 Configurable file upload limits
 
-## Clone Repository
+## 🔄 RAG Pipeline
+
+```text
+Document Upload
+      ↓
+Document Processing
+      ↓
+Text Extraction & Chunking
+      ↓
+Vector Embeddings
+      ↓
+Qdrant Vector Database
+      ↓
+User Question
+      ↓
+Semantic Search
+      ↓
+Relevant Document Chunks
+      ↓
+Gemini
+      ↓
+Generated Answer
+```
+
+The RAG pipeline allows the application to retrieve relevant information from uploaded study material before generating an answer.
+
+## 📋 Prerequisites
+
+Before running the backend, install:
+
+* Java 17+
+* Maven
+* PostgreSQL
+* Qdrant
+* Google Gemini API access
+
+## ⚙️ Configuration
+
+Create your local `application.properties` file and configure the required services.
+
+Example configuration:
+
+```properties
+spring.application.name=backend
+
+# PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/<DATABASE_NAME>
+spring.datasource.username=<DATABASE_USERNAME>
+spring.datasource.password=<DATABASE_PASSWORD>
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+server.port=8080
+
+# File Upload
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+file.upload-dir=uploads/
+
+# Gemini
+gemini.api.key=<GEMINI_API_KEY>
+
+# Qdrant
+qdrant.host=localhost
+qdrant.port=6334
+qdrant.collection=prepvector
+```
+
+
+
+## 🗄️ PostgreSQL Setup
+
+Create a PostgreSQL database for the application:
+
+```sql
+CREATE DATABASE prepvector;
+```
+
+Then update the database configuration in your local `application.properties`.
+
+## 🔎 Qdrant Setup
+
+PrepVector uses **Qdrant** for storing and searching vector embeddings.
+
+Default local configuration:
+
+```properties
+qdrant.host=localhost
+qdrant.port=6334
+qdrant.collection=prepvector
+```
+
+Qdrant can also be run using Docker:
+
+```bash
+docker run -p 6333:6333 -p 6334:6334 qdrant/qdrant
+```
+
+## ▶️ Running Locally
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/nikshay17/PrepVector-Backend.git
+```
 
+Navigate to the project:
+
+```bash
 cd PrepVector-Backend
 ```
 
----
-
-## Install Dependencies
+Build the project:
 
 ```bash
-npm install
+mvn clean install
 ```
 
----
-
-## Environment Variables
-
-Create a `.env` file.
-
-```env
-PORT=5000
-
-MONGO_URI=your_mongodb_connection_string
-
-JWT_SECRET=your_jwt_secret
-
-BREVO_API_KEY=your_brevo_api_key
-
-EMAIL_USER=your_email
-EMAIL_PASS=your_password
-
-CLOUDINARY_CLOUD_NAME=xxxx
-CLOUDINARY_API_KEY=xxxx
-CLOUDINARY_API_SECRET=xxxx
-
-GEMINI_API_KEY=your_gemini_api_key
-
-PYTHON_API=http://localhost:8000
-```
-
----
-
-## Run Development Server
+Run the application:
 
 ```bash
-npm run dev
+mvn spring-boot:run
 ```
 
-or
+The backend will be available at:
 
-```bash
-npm start
+```text
+http://localhost:8080
 ```
 
-Backend runs on
+## 📁 File Upload
 
-```
-http://localhost:5000
-```
+Uploaded files are stored in the configured upload directory:
 
----
-
-# API Overview
-
-## Authentication
-
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| POST | `/api/auth/register` | Register user |
-| POST | `/api/auth/login` | Login |
-| POST | `/api/auth/send-otp` | Send OTP |
-| POST | `/api/auth/verify-otp` | Verify OTP |
-
----
-
-## User
-
-| Method | Endpoint |
-|---------|----------|
-| GET | `/api/user/profile` |
-
----
-
-## PDF
-
-| Method | Endpoint |
-|---------|----------|
-| POST | `/api/pdf/upload` |
-| GET | `/api/pdf` |
-| DELETE | `/api/pdf/:id` |
-
----
-
-## AI
-
-| Method | Endpoint |
-|---------|----------|
-| POST | `/api/chat/ask` |
-
----
-
-# Authentication
-
-Protected routes require:
-
-```
-Authorization: Bearer <JWT_TOKEN>
+```text
+uploads/
 ```
 
----
+The current maximum file size is:
 
-# Response Format
-
-Success
-
-```json
-{
-    "success": true,
-    "message": "Operation Successful",
-    "data": {}
-}
+```text
+10 MB
 ```
 
-Error
+## 🧠 Why RAG?
 
-```json
-{
-    "success": false,
-    "message": "Something went wrong"
-}
-```
+Instead of sending an entire document directly to an LLM, PrepVector:
 
----
+1. Processes the uploaded document.
+2. Splits it into smaller chunks.
+3. Converts the chunks into vector representations.
+4. Stores them in Qdrant.
+5. Searches for the most relevant chunks when a question is asked.
+6. Sends the relevant context to Gemini.
+7. Generates a context-aware answer.
 
-# Running with Frontend
+This improves the relevance of responses while reducing the amount of unnecessary information sent to the LLM.
 
-Clone frontend
 
-```bash
-git clone https://github.com/nikshay17/PrepVector-Frontend.git
-```
+## 👨‍💻 Author
 
-Run backend
+**Nikshay Kataria**
 
-```bash
-npm run dev
-```
+GitHub: https://github.com/nikshay17
 
-Run frontend
+## 📄 License
 
-```bash
-npm start
-```
-
----
-
-# Future Improvements
-
-- Chat history
-- Multiple document collections
-- Notes generation
-- Quiz generation
-- Flashcards
-- PDF summarization
-- Collaborative workspaces
-- Admin dashboard
-
----
-
-# Contributors
-
-- Nikshay Kataria
-- Team PrepVector
+This project is intended for educational and development purposes.
